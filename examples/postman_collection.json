@@ -1,0 +1,922 @@
+{
+  "info": {
+    "_postman_id": "abdfef84-fdd7-402e-8603-9f8e82882ee9",
+    "name": "Spacelama Public API (QA)",
+    "description": "Functional requests for QA — no error-case examples.\n\nOptional query params are included but **disabled** — enable in Params tab when needed.\n\nBase URL (production): `https://spacelama.com/modules/addons/public_api/api/index.php`.\n\nSetup: import environment, set `api_token`, `domain`, `contact_id`, etc.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{api_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "public_api_base",
+      "value": "https://spacelama.com/modules/addons/public_api/api/index.php"
+    },
+    {
+      "key": "swagger_ui_url",
+      "value": "https://spacelama.com/swagger-public-api.php"
+    },
+    {
+      "key": "api_token",
+      "value": ""
+    },
+    {
+      "key": "idempotency_key",
+      "value": "qa-00000000-0000-4000-8000-000000000001"
+    },
+    {
+      "key": "domain",
+      "value": "example.com"
+    },
+    {
+      "key": "search_query",
+      "value": "example"
+    },
+    {
+      "key": "contact_id",
+      "value": "ct_example"
+    },
+    {
+      "key": "operation_id",
+      "value": "op_01HQXZ7K3M9P5W2N"
+    },
+    {
+      "key": "dns_record_id",
+      "value": "rec_1"
+    },
+    {
+      "key": "dns_record_name",
+      "value": "www"
+    },
+    {
+      "key": "dns_record_type",
+      "value": "A"
+    }
+  ],
+  "item": [
+    {
+      "name": "Documentation",
+      "item": [
+        {
+          "name": "Swagger UI (browser)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{swagger_ui_url}}",
+              "host": [
+                "{{swagger_ui_url}}"
+              ]
+            },
+            "description": "Open in browser — interactive API docs"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Domains",
+      "item": [
+        {
+          "name": "List domains",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains&page=1&per_page=100",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains",
+                  "description": "API route"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default 1)"
+                },
+                {
+                  "key": "per_page",
+                  "value": "100",
+                  "description": "Items per page (default 100, max 500)"
+                },
+                {
+                  "key": "search",
+                  "value": "{{search_query}}",
+                  "description": "Partial domain name search",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_by",
+                  "value": "domain",
+                  "description": "domain | id | expiration_date | expiry_date | status",
+                  "disabled": true
+                },
+                {
+                  "key": "sort_order",
+                  "value": "asc",
+                  "description": "asc | desc",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "GET /domains — all query params listed (optional ones disabled by default)"
+          },
+          "response": []
+        },
+        {
+          "name": "Get domain by name",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk check availability",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/bulk_check",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/bulk_check",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"domains\": [\n    \"example.com\",\n    \"example.net\",\n    \"domains.games\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register domains (async)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotency_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/register",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/register",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "Optional: auto_renew, nameservers, addons, tld_extensions",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"domains\": [\n    {\n      \"domain\": \"acme-corp.com\",\n      \"period\": 1,\n      \"allow_premium\": false,\n      \"auto_renew\": true,\n      \"addons\": {\n        \"id_protection\": true,\n        \"dns_management\": false,\n        \"email_forwarding\": false\n      },\n      \"contacts\": {\n        \"registrant\": {\n          \"contact_id\": \"{{contact_id}}\"\n        },\n        \"admin\": {\n          \"use_registrant\": true\n        },\n        \"tech\": {\n          \"use_registrant\": true\n        },\n        \"billing\": {\n          \"use_registrant\": true\n        }\n      },\n      \"nameservers\": [\n        \"ns1.example.com\",\n        \"ns2.example.com\"\n      ],\n      \"tld_extensions\": {}\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register domains (contact fields)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotency_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/register",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/register",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "Registrant: contact fields directly in role object (no contact_id, no inline wrapper)",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"domains\": [\n    {\n      \"domain\": \"acme-corp.com\",\n      \"period\": 1,\n      \"allow_premium\": false,\n      \"auto_renew\": false,\n      \"contacts\": {\n        \"registrant\": {\n          \"first_name\": \"John\",\n          \"last_name\": \"Doe\",\n          \"type_company\": \"individual\",\n          \"email\": \"john.qa@example.com\",\n          \"phone\": \"+1.4155551234\",\n          \"address_line1\": \"123 Market St\",\n          \"address_line2\": \"Suite 400\",\n          \"city\": \"San Francisco\",\n          \"state\": \"CA\",\n          \"postal_code\": \"94103\",\n          \"country\": \"US\"\n        },\n        \"admin\": {\n          \"use_registrant\": true\n        },\n        \"tech\": {\n          \"use_registrant\": true\n        },\n        \"billing\": {\n          \"use_registrant\": true\n        }\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Renew domains (async)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotency_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/renew",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/renew",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "Optional addons — if omitted, renews currently enabled addons",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"domains\": [\n    {\n      \"domain\": \"{{domain}}\",\n      \"period\": 1,\n      \"addons\": {\n        \"id_protection\": true,\n        \"dns_management\": false,\n        \"email_forwarding\": false\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "List contacts",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/contacts&page=1",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/contacts",
+                  "description": "API route"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (default 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Items per page (default 50, max 100)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Create contact (individual)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotency_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/contacts",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/contacts",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"type_company\": \"individual\",\n  \"email\": \"john.qa@example.com\",\n  \"phone\": \"+1.4155551234\",\n  \"address_line1\": \"123 Market St\",\n  \"address_line2\": \"Suite 400\",\n  \"city\": \"San Francisco\",\n  \"state\": \"CA\",\n  \"postal_code\": \"94103\",\n  \"country\": \"US\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create contact (company)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotency_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/contacts",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/contacts",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\",\n  \"type_company\": \"company\",\n  \"company_name\": \"Acme LLC\",\n  \"email\": \"jane@acme.com\",\n  \"phone\": \"+1.4155551234\",\n  \"address_line1\": \"123 Market St\",\n  \"address_line2\": \"\",\n  \"city\": \"San Francisco\",\n  \"state\": \"CA\",\n  \"postal_code\": \"94103\",\n  \"country\": \"US\",\n  \"vat\": \"123456789\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Operations",
+      "item": [
+        {
+          "name": "Get operation status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/operations/{{operation_id}}",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/operations/{{operation_id}}",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "DNS",
+      "item": [
+        {
+          "name": "List DNS records",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                },
+                {
+                  "key": "type",
+                  "value": "{{dns_record_type}}",
+                  "description": "Optional filter: A, AAAA, CNAME, MX, TXT, NS, SRV, CAA",
+                  "disabled": true
+                },
+                {
+                  "key": "name",
+                  "value": "{{dns_record_name}}",
+                  "description": "Optional filter (@ or www)",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Enable type/name query params to filter"
+          },
+          "response": []
+        },
+        {
+          "name": "Create DNS record (A)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"www\",\n  \"type\": \"A\",\n  \"value\": \"192.0.2.1\",\n  \"ttl\": 3600\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create DNS record (MX + priority)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"@\",\n  \"type\": \"MX\",\n  \"value\": \"mail.example.com\",\n  \"ttl\": 3600,\n  \"priority\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update DNS record (by id)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{dns_record_id}}\",\n  \"name\": \"www\",\n  \"type\": \"A\",\n  \"value\": \"192.0.2.2\",\n  \"ttl\": 3600\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update DNS record (by name + type)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{dns_record_name}}\",\n  \"type\": \"{{dns_record_type}}\",\n  \"value\": \"192.0.2.2\",\n  \"ttl\": 600\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete DNS record (by id)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"{{dns_record_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete DNS record (by name + type)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"{{dns_record_name}}\",\n  \"type\": \"{{dns_record_type}}\",\n  \"value\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete DNS record (by query id)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns&id={{dns_record_id}}",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                },
+                {
+                  "key": "id",
+                  "value": "{{dns_record_id}}",
+                  "description": "Record id in query — no body needed"
+                }
+              ]
+            },
+            "description": "DELETE with id query param instead of JSON body"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete DNS record (by query name + type)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/dns",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/dns",
+                  "description": "API route"
+                },
+                {
+                  "key": "id",
+                  "value": "{{dns_record_id}}",
+                  "description": "Record id — alternative to body",
+                  "disabled": true
+                },
+                {
+                  "key": "name",
+                  "value": "{{dns_record_name}}",
+                  "description": "With type when id omitted",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "{{dns_record_type}}",
+                  "description": "With name when id omitted",
+                  "disabled": true
+                },
+                {
+                  "key": "value",
+                  "value": "",
+                  "description": "Optional disambiguator for name+type match",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Enable name/type/value query params (disabled by default)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Nameservers",
+      "item": [
+        {
+          "name": "Get nameservers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/nameservers",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/nameservers",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Set nameservers",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/nameservers",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/nameservers",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nameservers\": [\n    \"ns1.example.com\",\n    \"ns2.example.com\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset nameservers to default",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/{{domain}}/nameservers",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/{{domain}}/nameservers",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

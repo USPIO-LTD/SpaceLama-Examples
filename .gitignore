@@ -1,0 +1,17 @@
+# Секреты — НИКОГДА не коммитим
+.env
+.env.local
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Редакторы
+.vscode/
+.idea/
+*.swp
+
+# Логи
+*.log
