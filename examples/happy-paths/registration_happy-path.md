@@ -24,9 +24,10 @@ sequenceDiagram
 #### Steps
 
 ***1. Environment setup***
-
+```bash
 export API_BASE="https://spacelama.com/modules/addons/public_api/api/index.php"
 export API_KEY="your_api_key"
+```
 
 ***2. Check domain availability***
 ```bash
@@ -44,7 +45,12 @@ Response:
       "domain": "example.com",
       "available": true,
       "premium": false,
-      "tld": "com"
+      "tld": "com",
+      "pricing": {
+        "currency": "EUR",
+        "register": { "1": "12.99", "2": "25.98" },
+        "renew": { "1": "14.99", "2": "29.98" }
+      }
     }
   ]
 }
@@ -101,6 +107,10 @@ curl -X POST "$API_BASE?path=/domains/register" \
     ]
   }'
 ```
+If the TLD requires additional fields (e.g. `.co.ke`, `.us`), fetch them with
+`GET /domains/extension-requirements/{tld}` and pass them in `tld_extensions` keyed by TLD —
+see `examples/curl/register-domains-tld-extensions.sh`.
+
 Response (202 Accepted):
 ```json
 {
@@ -123,10 +133,17 @@ curl -X GET "$API_BASE?path=/operations/op_01HQXZ7K3M9P5W2N" \
 ```  
 Once finished:
 ```json
-{ 
-  "success": true, 
-  "operation_id": "op_01HQXZ7K3M9P5W2N", 
-  "status": "completed" 
+{
+  "success": true,
+  "data": {
+    "operation_id": "op_01HQXZ7K3M9P5W2N",
+    "type": "domains.register",
+    "status": "completed",
+    "progress": { "total": 1, "succeeded": 1, "failed": 0, "in_progress": 0, "pending": 0 },
+    "items": [
+      { "domain": "example.com", "status": "succeeded", "error_code": null }
+    ]
+  }
 }
 ```
 ***6. Retrieve domain details***

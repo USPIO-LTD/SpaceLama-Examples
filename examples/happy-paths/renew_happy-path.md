@@ -20,9 +20,10 @@ sequenceDiagram
 ```
 #### Steps
 ***1. Environment setup***
-
+```bash
 export API_BASE="https://spacelama.com/modules/addons/public_api/api/index.php"
 export API_KEY="your_api_key"
+```
 
 ***2. Check current domain status***
 ```bash
@@ -40,7 +41,7 @@ Response:
     } 
 }
 ```
-3. Submit renewal (async)
+***3. Submit renewal (async)***
 ```bash
 curl -X POST "$API_BASE?path=/domains/renew" \
   -H "Authorization: Bearer $API_KEY" \
@@ -52,7 +53,7 @@ curl -X POST "$API_BASE?path=/domains/renew" \
     ]
   }'
 ```  
-If addons is omitted, current addon settings on the domain are renewed as-is.
+If `addons` is omitted, current addon settings on the domain are renewed as-is.
 Up to 100 domains can be submitted per request (excess domains are ignored).
 
 Response (202 Accepted):
@@ -77,10 +78,17 @@ curl -X GET "$API_BASE?path=/operations/op_01HR3F8N2K7T1Q9M" \
 ```  
 Once finished:
 ```json
-{ 
-    "success": true, 
-    "operation_id": "op_01HR3F8N2K7T1Q9M", 
-    "status": "completed" 
+{
+  "success": true,
+  "data": {
+    "operation_id": "op_01HR3F8N2K7T1Q9M",
+    "type": "domains.renew",
+    "status": "completed",
+    "progress": { "total": 1, "succeeded": 1, "failed": 0, "in_progress": 0, "pending": 0 },
+    "items": [
+      { "domain": "example.com", "status": "succeeded", "new_expiration_date": "2027-08-15T00:00:00Z", "error_code": null }
+    ]
+  }
 }
 ```
 ***5. Check the new expiration date***
