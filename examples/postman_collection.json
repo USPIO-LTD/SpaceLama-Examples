@@ -37,6 +37,10 @@
       "value": "example.com"
     },
     {
+      "key": "tld",
+      "value": "us"
+    },
+    {
       "key": "search_query",
       "value": "example"
     },
@@ -320,6 +324,109 @@
                 }
               }
             }
+          },
+          "response": []
+        },
+        {
+          "name": "Check transfer availability",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/transfercheck",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/transfercheck",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "POST /transfercheck — up to 32 domains. auth_code is optional; price returned in EUR.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"domains\": [\n    {\n      \"domain\": \"{{domain}}\",\n      \"auth_code\": \"AUTH-CODE-123\"\n    },\n    {\n      \"domain\": \"another.net\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Transfer domains (async)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotency_key}}"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/transfer",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/transfer",
+                  "description": "API route"
+                }
+              ]
+            },
+            "description": "POST /domains/transfer — async, returns operation_id (type domains.transfer). Auth-code field is 'auth' (not 'auth_code'). registrant contact is required.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"domains\": [\n    {\n      \"domain\": \"{{domain}}\",\n      \"auth\": \"abc-123-epp-code\",\n      \"allow_premium\": false,\n      \"auto_renew\": false,\n      \"nameservers\": [\n        \"ns1.example.com\",\n        \"ns2.example.com\"\n      ],\n      \"contacts\": {\n        \"registrant\": {\n          \"contact_id\": \"{{contact_id}}\"\n        },\n        \"admin\": {\n          \"use_registrant\": true\n        },\n        \"tech\": {\n          \"use_registrant\": true\n        },\n        \"billing\": {\n          \"use_registrant\": true\n        }\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get extension requirements (TLD)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{public_api_base}}?path=/domains/extension-requirements/{{tld}}",
+              "host": [
+                "{{public_api_base}}"
+              ],
+              "query": [
+                {
+                  "key": "path",
+                  "value": "/domains/extension-requirements/{{tld}}",
+                  "description": "API route — tld without leading dot (e.g. us, ca, co.uk)"
+                }
+              ]
+            },
+            "description": "GET /domains/extension-requirements/{tld} — additional TLD fields for register/transfer. Empty data = no extra fields."
           },
           "response": []
         }

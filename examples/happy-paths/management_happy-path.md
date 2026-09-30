@@ -23,9 +23,10 @@ sequenceDiagram
 ```
 #### Steps
 ***1. Environment setup***
-
+```bash
 export API_BASE="https://spacelama.com/modules/addons/public_api/api/index.php"
 export API_KEY="your_api_key"
+```
 
 ***2. Get current nameservers***
 ```bash
